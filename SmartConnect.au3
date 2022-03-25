@@ -34,6 +34,7 @@
 #include <GifAnimation.au3>
 #include <UDF_RoundCorners.au3>
 #include <UDF_AnimateWindow.au3>
+#include <UDF\UDF_Imagens.au3>
 
 ;=======================================================================Creating the GUI===============================================================================
 ;Enable high DPI support: Detects the users DPI settings and resizes GUI and all controls to look perfectly sharp.
@@ -69,7 +70,7 @@ $GUI_FULLSCREEN_BUTTON = $Control_Buttons[4]
 $GUI_FSRestore_BUTTON = $Control_Buttons[5]
 $GUI_MENU_BUTTON = $Control_Buttons[6]
 
-_GUICtrlCreateGIF(@ScriptDir & '\MaterialDesign\Logo_SmartConnect.png', '', 15, 15, 224, 59)
+_GUICtrlCreateGIF(@TempDir & '\Logo_SmartConnect.png', '', 15, 15, 224, 59)
 
 GUICtrlCreateLabel("Configurar o dispositivo pela primeira vez", 184, 98, 282, 24)
 $idBtn_ConfigurarAgora = _Metro_CreateButtonEx2("Configurar agora", 240, 128, 155, 33)
@@ -146,7 +147,7 @@ Func hWnd_Atalhos()
 		$hWnd_Atalhos = GUICreate("SmartConnect - Atalhos", 499, 628, 125, -90, $WS_POPUP, $WS_EX_MDICHILD, $hWnd_Main)
 		GUISetBkColor($GUIThemeColor)
 
-		_GUICtrlCreateGIF(@ScriptDir & '\MaterialDesign\Atalhos.png', '', 0, 0, 499, 628)
+		_GUICtrlCreateGIF(@TempDir & '\Atalhos.png', '', 0, 0, 499, 628)
 		GUICtrlSetState(-1, $GUI_DISABLE)
 
 		$idBtn_Fechar_Atalhos = _Metro_CreateButtonEx2("Fechar", 376, 580, 83, 33)
@@ -184,7 +185,7 @@ EndFunc
 
 Func shadow_hWnd_Main()
 	$hWnd_ShadowApp = GUICreate("", 656, 410, 28, 9, $WS_POPUP, $WS_EX_MDICHILD + $WS_EX_LAYERED, $hwnd_Main)
-	Local $iSplashShadowApp = _GDIPlus_ImageLoadFromFile(@ScriptDir & "\MaterialDesign\Sombra_hWnd_Main.png")
+	Local $iSplashShadowApp = _GDIPlus_ImageLoadFromFile(@TempDir & "\Sombra_hWnd_Main.png")
 	For $i = 0 To 255 Step 10
 		drawPNG($i, $hWnd_ShadowApp, $iSplashShadowApp)
 	Next
@@ -194,7 +195,7 @@ EndFunc   ;==>shadowApp
 
 Func shadow_hWnd_Opcoes()
 	$hWnd_ShadowOpcoes = GUICreate("", 568, 310, -11, -13, $WS_POPUP, $WS_EX_MDICHILD + $WS_EX_LAYERED, $hWnd_Opcoes)
-	Local $iSplashShadowOpcoes = _GDIPlus_ImageLoadFromFile(@ScriptDir & "\MaterialDesign\Sombra_hWnd_Opcoes.png")
+	Local $iSplashShadowOpcoes = _GDIPlus_ImageLoadFromFile(@TempDir & "\Sombra_hWnd_Opcoes.png")
 	For $i = 0 To 255 Step 10
 		drawPNG($i, $hWnd_ShadowOpcoes, $iSplashShadowOpcoes)
 	Next
