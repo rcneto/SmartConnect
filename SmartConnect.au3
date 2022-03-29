@@ -51,6 +51,9 @@ Global $Slider1 = 0x1, $idBtn_Fechar_Opcoes = 0x1
 
 Global $hWnd_ShadowOpcoes
 
+Global $hWnd_Mensagem
+Global $idBtn_Fechar_Mensagem = 0x1
+
 Global $fConfig = @ScriptDir & '\Config.ini'
 Global $rBitRate = IniRead($fConfig, 'BitRate', 1, '8')
 Global $rWiFi = IniRead($fConfig, 'Wifi', 1, 'False')
@@ -108,6 +111,24 @@ While 1
 		Case $GUI_MINIMIZE_BUTTON
 			GUISetState(@SW_MINIMIZE, $hWnd_Main)
 
+		Case $idBtn_ConfigurarAgora
+			hWnd_Mensagem('Recurso indisponivel no momento', True)
+
+		Case $idBtn_Conectar
+			If $rWiFi = 'False' Then
+				hWnd_Mensagem('Aguarde. . .')
+				Run(StringFormat('%s %s "%s\scrcpy.exe" -b %sM --max-fps 30', @ComSpec, '/c', @ScriptDir, $rBitRate), '', @SW_HIDE)
+			Else
+				Local $idInput = InputBox('SmartConnect', StringFormat('O dispositivo deve estar na mesma rede WiFi %s%s Digite o ip do smartphone', @CRLF, @CRLF),'')
+				If $idInput <> '' Then
+					hWnd_Mensagem('Aguarde. . .')
+					Local $iPID = Run(StringFormat('%s %s "%s\adb.exe" connect %s:5555', @ComSpec, '/c', @ScriptDir, $idInput));, '', @SW_HIDE)
+					ProcessWaitClose($iPID)
+					Run(StringFormat('%s %s "%s\scrcpy.exe" -b %sM --max-fps 30', @ComSpec, '/c', @ScriptDir, $rBitRate), '', @SW_HIDE)
+					;~ Run(StringFormat('%s %s "%s\scrcpy.exe" -b %sM --max-fps 30', @ComSpec, '/c', @ScriptDir, $rBitRate))
+				EndIf
+			EndIf
+
 		Case $idBtn_Atalhos
 			hWnd_Atalhos()
 		
@@ -128,6 +149,11 @@ While 1
 		Case $idCheck_Habilitado
 			If GUICtrlRead($idCheck_Habilitado) = $GUI_CHECKED Then
 				IniWrite($fConfig, 'Wifi', 1, 'True')
+				Local $iPID = Run(StringFormat('%s\adb.exe tcpip 5555', @ScriptDir), '', @SW_HIDE)
+				ProcessWaitClose($iPID)				
+				Local $iPID = Run(StringFormat('%s\adb.exe tcpip 5555', @ScriptDir), '', @SW_HIDE)
+				ProcessWaitClose($iPID)
+				MsgBox(0, '', 'Desconecte o cabo')
 			Else
 				IniWrite($fConfig, 'Wifi', 1, 'False')
 			EndIf
@@ -139,15 +165,18 @@ While 1
 			$hWnd_Opcoes = ''
 			_SetTheme("RunMe")
 
+		Case $idBtn_Fechar_Mensagem
+			_Metro_GUIDelete($hWnd_Mensagem)
+
 	EndSwitch
 WEnd
 
 Func hWnd_Atalhos()
 	If $hWnd_Atalhos = '' Then
 		$hWnd_Atalhos = GUICreate("SmartConnect - Atalhos", 499, 628, 125, -90, $WS_POPUP, $WS_EX_MDICHILD, $hWnd_Main)
-		GUISetBkColor($GUIThemeColor)
+		GUISetBkColor(0x0D1117)
 
-		_GUICtrlCreateGIF(@TempDir & '\Atalhos.png', '', 0, 0, 499, 628)
+		_GUICtrlCreateGIF(@TempDir & '\Atalhos.png', '', 30, 20, 441, 550)
 		GUICtrlSetState(-1, $GUI_DISABLE)
 
 		$idBtn_Fechar_Atalhos = _Metro_CreateButtonEx2("Fechar", 376, 580, 83, 33)
@@ -171,7 +200,7 @@ Func hWnd_Opcoes()
 		GUICtrlSetBkColor(-1, $GUIThemeColor)
 		
 		GUICtrlCreateLabel("Conectar por Wifi", 80, 120, 127, 21)
-		$idCheck_Habilitado = GUICtrlCreateCheckbox("Habilitado", 88, 152, 97, 17)
+		$idCheck_Habilitado = GUICtrlCreateCheckbox("Habilitar", 88, 152, 97, 17)
 		If $rWiFi = 'True' Then GUICtrlSetState($idCheck_Habilitado, $GUI_CHECKED)
 		$idBtn_Fechar_Opcoes = _Metro_CreateButtonEx2("Fechar", 360, 192, 115, 33)
 
@@ -181,6 +210,32 @@ Func hWnd_Opcoes()
 		shadow_hWnd_Opcoes()
 		GUISwitch($hWnd_Opcoes)
 	EndIf
+EndFunc
+
+Func hWnd_Mensagem($Mensagem, $BotaoFechar = False)
+	_SetTheme("StoreApp")
+	$hWnd_Mensagem = GUICreate("SmartConnect - Mensagem", 433, 169, 110, 90, $WS_POPUP, $WS_EX_MDICHILD, $hWnd_Main)
+	GUISetFont(10, 400, 0, "Segoe UI")
+	GUISetBkColor($GUIThemeColor)
+	Local $aGetPos = WinGetPos($hWnd_Mensagem)
+	GUICtrlCreateLabel($Mensagem, 0, 40, $aGetPos[2] - 2, 21, $SS_CENTER)
+	GUICtrlSetColor(-1, $FontThemeColor)
+	If $BotaoFechar = False Then
+		GUICtrlCreateProgress(105, 72, 222, 9, 0x8)
+		_SendMessage(GUICtrlGetHandle(-1), $PBM_SETMARQUEE, True, 30)
+		AdlibRegister('fechar_Mensagem_Auto', 5000)
+	Else
+		$idBtn_Fechar_Mensagem = _Metro_CreateButtonEx2("Fechar", 312, 120, 91, 33)
+	EndIf
+	_RoundCorners($hWnd_Mensagem, 3, 3, 20, 20)
+	_WinAPI_AnimateWindow($hWnd_Mensagem, $tAW.explode, 250)
+	GUISetState(@SW_SHOW)
+	_SetTheme("RunMe")
+EndFunc
+
+Func fechar_Mensagem_Auto()
+	_Metro_GUIDelete($hWnd_Mensagem)
+	AdlibUnRegister('fechar_Mensagem_Auto')
 EndFunc
 
 Func shadow_hWnd_Main()
