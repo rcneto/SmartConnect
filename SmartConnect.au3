@@ -9,6 +9,7 @@
 
 #ce ----------------------------------------------------------------------------
 
+;~ qualquer coisa
 
 ;!Highly recommended for improved overall performance and responsiveness of the GUI effects etc.! (after compiling):
 #AutoIt3Wrapper_Run_Au3Stripper=y
@@ -42,6 +43,8 @@ _Metro_EnableHighDPIScaling() ;
 
 ;Set Theme
 _SetTheme("RunMe") ;See MetroThemes.au3 for selectable themes or to add more
+
+
 
 Global $hWnd_Atalhos
 Global $idBtn_Fechar_Atalhos = 0x1
@@ -167,6 +170,9 @@ While 1
 
 		Case $idBtn_Fechar_Mensagem
 			_Metro_GUIDelete($hWnd_Mensagem)
+
+		Case $idBtn_Sobre
+			MsgBox(262144+64, 'SmartConnect', 'Interface criada em Autoit' & @CRLF & @CRLF & 'Rodrigo Chaves Neto')
 
 	EndSwitch
 WEnd
