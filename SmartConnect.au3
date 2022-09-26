@@ -98,7 +98,7 @@ GUICtrlSetFont(-1, 10, 400, 0, "Segoe UI")
 $idBtn_Opcoes = _Metro_CreateButtonEx2("Opções", 472, 320, 139, 33)
 GUICtrlSetFont(-1, 10, 400, 0, "Segoe UI")
 
-_RoundCorners($hWnd_Main, 3, 3, 20, 20)
+;~ _RoundCorners($hWnd_Main, 3, 3, 20, 20)
 GUISetState(@SW_SHOW)
 
 shadow_hWnd_Main()
@@ -186,7 +186,7 @@ Func hWnd_Atalhos()
 		GUICtrlSetState(-1, $GUI_DISABLE)
 
 		$idBtn_Fechar_Atalhos = _Metro_CreateButtonEx2("Fechar", 376, 580, 83, 33)
-		_RoundCorners($hWnd_Atalhos, 3, 3, 20, 20)
+		;~ _RoundCorners($hWnd_Atalhos, 3, 3, 20, 20)
 		_WinAPI_AnimateWindow($hWnd_Atalhos, $tAW.explode, 250)
 		GUISetState(@SW_SHOW)
 	EndIf
@@ -210,7 +210,7 @@ Func hWnd_Opcoes()
 		If $rWiFi = 'True' Then GUICtrlSetState($idCheck_Habilitado, $GUI_CHECKED)
 		$idBtn_Fechar_Opcoes = _Metro_CreateButtonEx2("Fechar", 360, 192, 115, 33)
 
-		_RoundCorners($hWnd_Opcoes, 3, 3, 20, 20)
+		;~ _RoundCorners($hWnd_Opcoes, 3, 3, 20, 20)
 		_WinAPI_AnimateWindow($hWnd_Opcoes, $tAW.explode, 250)
 		GUISetState(@SW_SHOW)
 		shadow_hWnd_Opcoes()
@@ -233,7 +233,7 @@ Func hWnd_Mensagem($Mensagem, $BotaoFechar = False)
 	Else
 		$idBtn_Fechar_Mensagem = _Metro_CreateButtonEx2("Fechar", 312, 120, 91, 33)
 	EndIf
-	_RoundCorners($hWnd_Mensagem, 3, 3, 20, 20)
+	;~ _RoundCorners($hWnd_Mensagem, 3, 3, 20, 20)
 	_WinAPI_AnimateWindow($hWnd_Mensagem, $tAW.explode, 250)
 	GUISetState(@SW_SHOW)
 	_SetTheme("RunMe")
